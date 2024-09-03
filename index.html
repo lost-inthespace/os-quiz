@@ -59,15 +59,48 @@ button:hover {
     color: #27ae60;
 }
 
+        .night-mode {
+    background-color: #121212;
+    color: #e0e0e0;
+}
+
+.night-mode .question {
+    background-color: #1e1e1e;
+    color: #e0e0e0;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.3);
+}
+
+.night-mode button {
+    background-color: #444;
+    color: #fff;
+}
+
+.night-mode button:hover {
+    background-color: #555;
+}
+
+
     </style>
 </head>
 <body>
     <h1>Operating Systems Quiz</h1>
+
+    <button type="button" onclick="toggleNightMode()">Toggle Night Mode</button>
+    
+    <div>
+        <label for="username">Enter your name:</label>
+        <input type="text" id="username" required>
+    </div>
     <form id="quiz-form">
         <div id="questions-container"></div>
         <button type="button" onclick="submitQuiz()">Submit Quiz</button>
     </form>
     <div id="result"></div>
+
+    <div id="submissions" style="margin-top: 30px;">
+        <h2>Submissions:</h2>
+    </div>
+
 
     <script>
         const questions = [
@@ -755,6 +788,11 @@ button:hover {
             }
         ];
 
+        function toggleNightMode() {
+            document.body.classList.toggle("night-mode");
+        }
+
+
         function getRandomQuestions() {
             let selectedQuestions = [];
             while (selectedQuestions.length < 20) {
@@ -784,18 +822,59 @@ button:hover {
         }
 
         function submitQuiz() {
-            let score = 0;
-            const form = document.getElementById("quiz-form");
-            const data = new FormData(form);
-            data.forEach((value, key) => {
-                const questionIndex = parseInt(key.replace("question", ""));
-                if (parseInt(value) === questions[questionIndex].answer) {
-                    score += 1;
-                }
+    const username = document.getElementById("username").value;
+    if (!username) {
+        alert("Please enter your name.");
+        return;
+    }
+
+    let score = 0;
+    let correctAnswers = [];
+    let wrongAnswers = [];
+    const form = document.getElementById("quiz-form");
+    const data = new FormData(form);
+    data.forEach((value, key) => {
+        const questionIndex = parseInt(key.replace("question", ""));
+        if (parseInt(value) === questions[questionIndex].answer) {
+            score += 1;
+            correctAnswers.push(questions[questionIndex].question);
+        } else {
+            wrongAnswers.push({
+                question: questions[questionIndex].question,
+                selected: questions[questionIndex].options[value],
+                correct: questions[questionIndex].options[questions[questionIndex].answer]
             });
-            document.getElementById("result").innerText = `You scored ${score}/20`;
-            localStorage.setItem('lastScore', score);
         }
+    });
+
+    document.getElementById("result").innerText = `You scored ${score}/20`;
+
+    const submissionDiv = document.createElement("div");
+    submissionDiv.innerHTML = `<strong>${username}:</strong> Scored ${score}/20<br>`;
+
+    // Display correct answers
+    if (correctAnswers.length > 0) {
+        submissionDiv.innerHTML += `<br><strong>Correctly Answered Questions:</strong><ul>`;
+        correctAnswers.forEach(q => {
+            submissionDiv.innerHTML += `<li>${q}</li>`;
+        });
+        submissionDiv.innerHTML += `</ul>`;
+    }
+
+    // Display wrong answers with correct and selected options
+    if (wrongAnswers.length > 0) {
+        submissionDiv.innerHTML += `<br><strong>Incorrectly Answered Questions:</strong><ul>`;
+        wrongAnswers.forEach(w => {
+            submissionDiv.innerHTML += `<li>${w.question}<br>
+                <strong>Your Answer:</strong> ${w.selected}<br>
+                <strong>Correct Answer:</strong> ${w.correct}</li>`;
+        });
+        submissionDiv.innerHTML += `</ul>`;
+    }
+
+    document.getElementById("submissions").appendChild(submissionDiv);
+}
+
 
         window.onload = displayQuestions;
     </script>
