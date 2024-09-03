@@ -1,0 +1,93 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Operating Systems Quiz</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 20px;
+        }
+        .question {
+            margin-bottom: 20px;
+        }
+        .options {
+            margin-left: 20px;
+        }
+        button {
+            margin-top: 20px;
+            padding: 10px 20px;
+            font-size: 16px;
+        }
+    </style>
+</head>
+<body>
+    <h1>Operating Systems Quiz</h1>
+    <form id="quiz-form">
+        <div id="questions-container"></div>
+        <button type="button" onclick="submitQuiz()">Submit Quiz</button>
+    </form>
+    <div id="result"></div>
+
+    <script>
+        const questions = [
+            {
+                question: "What is an Operating System?",
+                options: ["A hardware component", "A software that manages computer resources", "An application program", "A database system"],
+                answer: 1
+            },
+            {
+                question: "Which of the following is a type of system call?",
+                options: ["Process control", "File management", "Device management", "All of the above"],
+                answer: 3
+            },
+            // Add 98 more questions here based on the topics extracted
+        ];
+
+        function getRandomQuestions() {
+            let selectedQuestions = [];
+            while (selectedQuestions.length < 20) {
+                let randomIndex = Math.floor(Math.random() * questions.length);
+                if (!selectedQuestions.includes(questions[randomIndex])) {
+                    selectedQuestions.push(questions[randomIndex]);
+                }
+            }
+            return selectedQuestions;
+        }
+
+        function displayQuestions() {
+            const questionsContainer = document.getElementById("questions-container");
+            const randomQuestions = getRandomQuestions();
+            randomQuestions.forEach((q, index) => {
+                let questionDiv = document.createElement("div");
+                questionDiv.className = "question";
+                questionDiv.innerHTML = `<p>${index + 1}. ${q.question}</p>`;
+                q.options.forEach((option, i) => {
+                    questionDiv.innerHTML += `
+                        <div class="options">
+                            <input type="radio" name="question${index}" value="${i}"> ${option}
+                        </div>`;
+                });
+                questionsContainer.appendChild(questionDiv);
+            });
+        }
+
+        function submitQuiz() {
+            let score = 0;
+            const form = document.getElementById("quiz-form");
+            const data = new FormData(form);
+            data.forEach((value, key) => {
+                const questionIndex = parseInt(key.replace("question", ""));
+                if (parseInt(value) === questions[questionIndex].answer) {
+                    score += 1;
+                }
+            });
+            document.getElementById("result").innerText = `You scored ${score}/20`;
+            localStorage.setItem('lastScore', score);
+        }
+
+        window.onload = displayQuestions;
+    </script>
+</body>
+</html>
