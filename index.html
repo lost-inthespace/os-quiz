@@ -6,877 +6,938 @@
     <title>Operating Systems Quiz</title>
     <style>
         body {
-    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-    margin: 40px;
-    background-color: #f4f4f4;
-    color: #333;
-}
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            margin: 40px;
+            background-color: #f4f4f4;
+            color: #333;
+        }
 
-h1 {
-    text-align: center;
-    color: #2c3e50;
-    margin-bottom: 30px;
-}
+        h1 {
+            text-align: center;
+            color: #2c3e50;
+            margin-bottom: 30px;
+        }
 
-.question {
-    background: #fff;
-    padding: 20px;
-    border-radius: 8px;
-    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
-    margin-bottom: 20px;
-}
+        .question {
+            background: #fff;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+            margin-bottom: 20px;
+        }
 
-.options {
-    margin-left: 20px;
-}
+        .options {
+            margin-left: 20px;
+        }
 
-.options input[type="radio"] {
-    margin-right: 10px;
-}
+        .options input[type="radio"] {
+            margin-right: 10px;
+        }
 
-button {
-    display: block;
-    width: 100%;
-    background-color: #3498db;
-    color: white;
-    border: none;
-    padding: 15px;
-    font-size: 18px;
-    border-radius: 8px;
-    cursor: pointer;
-    transition: background-color 0.3s ease;
-}
+        button {
+            display: block;
+            width: 100%;
+            background-color: #3498db;
+            color: white;
+            border: none;
+            padding: 15px;
+            font-size: 18px;
+            border-radius: 8px;
+            cursor: pointer;
+            transition: background-color 0.3s ease;
+        }
 
-button:hover {
-    background-color: #2980b9;
-}
+        button:hover {
+            background-color: #2980b9;
+        }
 
-#result {
-    text-align: center;
-    font-size: 20px;
-    font-weight: bold;
-    margin-top: 20px;
-    color: #27ae60;
-}
+        #result {
+            text-align: center;
+            font-size: 20px;
+            font-weight: bold;
+            margin-top: 20px;
+            color: #27ae60;
+        }
 
         .night-mode {
-    background-color: #121212;
-    color: #e0e0e0;
-}
+            background-color: #121212;
+            color: #e0e0e0;
+        }
 
-.night-mode .question {
-    background-color: #1e1e1e;
-    color: #e0e0e0;
-    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.3);
-}
+        .night-mode .question {
+            background-color: #1e1e1e;
+            color: #e0e0e0;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.3);
+        }
 
-.night-mode button {
-    background-color: #444;
-    color: #fff;
-}
+        .night-mode button {
+            background-color: #444;
+            color: #fff;
+        }
 
-.night-mode button:hover {
-    background-color: #555;
-}
+        .night-mode button:hover {
+            background-color: #555;
+        }
 
+        .submissions-list {
+            list-style: none;
+            padding-left: 0;
+        }
 
+        .submissions-list li {
+            cursor: pointer;
+            padding: 10px;
+            margin: 5px 0;
+            background-color: #f8f8f8;
+            border-radius: 5px;
+            transition: background-color 0.3s ease;
+        }
+
+        .submissions-list li:hover {
+            background-color: #ddd;
+        }
+
+        .submission-detail {
+            margin-top: 20px;
+            padding: 20px;
+            background: #e9e9e9;
+            border-radius: 8px;
+        }
     </style>
 </head>
 <body>
-    <h1>Operating Systems Quiz</h1>
+<h1>Operating Systems Quiz</h1>
 
-    <button type="button" onclick="toggleNightMode()">Toggle Night Mode</button>
-    
-    <div>
-        <label for="username">Enter your name:</label>
-        <input type="text" id="username" required>
-    </div>
-    <form id="quiz-form">
-        <div id="questions-container"></div>
-        <button type="button" onclick="submitQuiz()">Submit Quiz</button>
-    </form>
-    <div id="result"></div>
+<button type="button" onclick="toggleNightMode()">Toggle Night Mode</button>
 
-    <div id="submissions" style="margin-top: 30px;">
-        <h2>Submissions:</h2>
-    </div>
+<div>
+    <label for="username">Enter your name:</label>
+    <input type="text" id="username" required>
+</div>
+
+<form id="quiz-form">
+    <div id="questions-container"></div>
+    <button type="button" onclick="submitQuiz()">Submit Quiz</button>
+</form>
+<div id="result"></div>
+
+<div id="submissions" style="margin-top: 30px;">
+    <h2>Submissions:</h2>
+    <ul id="submissions-list" class="submissions-list"></ul>
+</div>
+
+<div id="submission-detail" class="submission-detail"></div>
 
 
-    <script>
-        const questions = [
 
-            {
-                question: "What is an Operating System?",
-                options: ["A hardware component", "A software that manages computer resources", "An application program", "A database system"],
-                answer: 1
-            },
-            {
-                question: "Which of the following is a type of system call?",
-                options: ["Process control", "File management", "Device management", "All of the above"],
-                answer: 3
-            },
+<script>
+    const questions = [
 
-            {
-                question: "Which of the following is not a function of the operating system?",
-                options: ["Memory management", "Disk management", "Virus protection", "File management"],
-                answer: 2
-            },
-            {
-                question: "What does CPU scheduling manage?",
-                options: ["Execution of processes", "Memory allocation", "File handling", "Networking"],
-                answer: 0
-            },
-            {
-                question: "In what mode does the OS run user applications?",
-                options: ["Kernel mode", "User mode", "Privileged mode", "Administrative mode"],
-                answer: 1
-            },
-            {
-                question: "Which part of the OS is always running?",
-                options: ["Shell", "Device driver", "Kernel", "Application program"],
-                answer: 2
-            },
-            {
-                question: "What does the 'trap' do in the operating system?",
-                options: ["Shuts down the system", "Interrupts a running process", "Handles errors or exceptions", "Schedules the next process"],
-                answer: 2
-            },
-            {
-                question: "What does the process control block (PCB) contain?",
-                options: ["Program code", "Process state", "CPU registers", "All of the above"],
-                answer: 3
-            },
-            {
-                question: "Which of the following is true about time-sharing systems?",
-                options: ["They allow multiple users to interact with a computer at the same time", "They only support batch processing", "They are less efficient than single-task systems", "They do not allow process switching"],
-                answer: 0
-            },
-            {
-                question: "Which of the following is not a component of the CPU?",
-                options: ["Arithmetic Logic Unit (ALU)", "Control Unit", "Memory", "Registers"],
-                answer: 2
-            },
-            {
-                question: "What does virtual memory allow?",
-                options: ["Execution of programs larger than the physical memory", "Faster CPU operation", "Direct access to the hard drive", "Running only one process at a time"],
-                answer: 0
-            },
-            {
-                question: "Which of the following is an example of a multi-user operating system?",
-                options: ["MS-DOS", "Windows 10", "UNIX", "Android"],
-                answer: 2
-            },
-            {
-                question: "Which scheduling algorithm allows the longest jobs to be done first?",
-                options: ["Shortest Job First (SJF)", "First Come First Serve (FCFS)", "Priority Scheduling", "Last Job First"],
-                answer: 0
-            },
-            {
-                question: "Which of these is a non-preemptive scheduling algorithm?",
-                options: ["Round Robin", "First Come First Serve", "Priority Scheduling", "Multilevel Queue"],
-                answer: 1
-            },
-            {
-                question: "What is a deadlock in operating systems?",
-                options: ["A process is terminated unexpectedly", "Two or more processes are stuck waiting for each other", "A program runs indefinitely", "A CPU crash"],
-                answer: 1
-            },
-            {
-                question: "What is the purpose of the file allocation table (FAT)?",
-                options: ["Manage the memory", "Track the location of files on disk", "Control network access", "Handle interrupts"],
-                answer: 1
-            },
-            {
-                question: "What is the primary role of the shell in an operating system?",
-                options: ["To interact with hardware", "To manage memory", "To provide a user interface", "To schedule tasks"],
-                answer: 3
-            },
-            {
-                question: "Which of the following is not an example of a system call?",
-                options: ["open()", "read()", "printf()", "fork()"],
-                answer: 2
-            },
-            {
-                question: "Which memory management scheme requires keeping the entire program in memory at once?",
-                options: ["Paging", "Segmentation", "Contiguous Allocation", "Virtual Memory"],
-                answer: 2
-            },
-            {
-                question: "Which term describes the delay in accessing memory?",
-                options: ["Memory Latency", "Memory Bandwidth", "Memory Throughput", "Memory Allocation"],
-                answer: 0
-            },
-            {
-                question: "In which state is a process waiting for an event to happen?",
-                options: ["Running", "Waiting", "Ready", "Terminated"],
-                answer: 1
-            },
-            {
-                question: "What is thrashing in an operating system?",
-                options: ["Excessive swapping of pages", "Memory leak", "Disk crash", "CPU overheating"],
-                answer: 0
-            },
-            {
-                question: "Which of these is not a layer of the OSI model?",
-                options: ["Application", "Session", "Transport", "Firmware"],
-                answer: 3
-            },
-            {
-                question: "What is the smallest unit of storage in memory?",
-                options: ["Byte", "Bit", "Nibble", "Word"],
-                answer: 1
-            },
-            {
-                question: "Which of the following is a real-time operating system?",
-                options: ["Windows XP", "VxWorks", "Ubuntu", "Linux Mint"],
-                answer: 1
-            },
-            {
-                question: "What does DMA stand for in operating systems?",
-                options: ["Direct Memory Access", "Dual Mode Access", "Dynamic Memory Allocation", "Direct Management Access"],
-                answer: 0
-            },
-            {
-                question: "What is the function of a device driver?",
-                options: ["To control a particular type of device attached to a computer", "To manage memory", "To schedule processes", "To manage network connections"],
-                answer: 0
-            },
-            {
-                question: "Which of the following is not an advantage of multiprogramming?",
-                options: ["Better CPU utilization", "Reduced I/O wait time", "Simpler implementation", "Increased throughput"],
-                answer: 2
-            },
-            {
-                question: "Which is a benefit of using a multi-core processor?",
-                options: ["Increased battery life", "Faster single-thread performance", "Ability to run multiple processes simultaneously", "Reduced heat generation"],
-                answer: 2
-            },
-            {
-                question: "Which is not a type of memory management technique?",
-                options: ["Paging", "Segmentation", "Virtual Memory", "Pipelining"],
-                answer: 3
-            },
-            {
-                question: "Which of these is a characteristic of a microkernel?",
-                options: ["Large and monolithic", "Minimal functionality in the kernel", "No support for multitasking", "Direct control of hardware"],
-                answer: 1
-            },
-            {
-                question: "What is the primary function of the bootstrap program?",
-                options: ["To manage memory", "To load the operating system into memory", "To perform file management", "To initialize the CPU"],
-                answer: 1
-            },
-            {
-                question: "Which of the following is a disadvantage of virtual memory?",
-                options: ["Allows execution of large programs", "Increased system complexity", "Better CPU utilization", "Reduces memory fragmentation"],
-                answer: 1
-            },
-            {
-                question: "What is the primary purpose of the scheduler in an operating system?",
-                options: ["To manage files", "To control access to hardware", "To determine which process runs next", "To handle interrupts"],
-                answer: 3
-            },
-            {
-                question: "Which is an example of preemptive multitasking?",
-                options: ["A single-tasking operating system", "Round-robin scheduling", "First-Come-First-Served (FCFS)", "Priority Scheduling without preemption"],
-                answer: 1
-            },
-            {
-                question: "Which of the following is used to manage concurrent processes?",
-                options: ["Mutexes", "Pipes", "Threads", "All of the above"],
-                answer: 3
-            },
-            {
-                question: "Which of the following is not true about process synchronization?",
-                options: ["It prevents race conditions", "It is necessary for concurrent processes", "It always improves system performance", "It can lead to deadlock if not handled properly"],
-                answer: 2
-            },
-            {
-                question: "Which of the following is true about interrupts?",
-                options: ["They are used to signal the occurrence of an event", "They are generated by the operating system only", "They do not affect the current process", "They are handled by the user mode"],
-                answer: 0
-            },
-            {
-                question: "Which of the following is a non-volatile storage device?",
-                options: ["RAM", "Cache", "SSD", "Registers"],
-                answer: 2
-            },
-            {
-                question: "What is the purpose of the swap space in an operating system?",
-                options: ["To store user files", "To provide additional memory by swapping data to disk", "To store the kernel", "To manage file systems"],
-                answer: 1
-            },
-            {
-                question: "What is a context switch?",
-                options: ["Changing from one user to another", "Saving the state of a process and loading the state of another", "Starting a new application", "Shutting down the operating system"],
-                answer: 1
-            },
-            {
-                question: "Which scheduling algorithm is ideal for time-shared systems?",
-                options: ["Shortest Job First", "Round Robin", "First Come First Serve", "Priority Scheduling"],
-                answer: 1
-            },
-            {
-                question: "What is the role of a system call in an operating system?",
-                options: ["To manage hardware devices", "To provide an interface between a process and the operating system", "To schedule tasks", "To allocate memory"],
-                answer: 1
-            },
-            {
-                question: "Which of the following does not cause a context switch?",
-                options: ["I/O operation", "Interrupt", "System call", "Page fault"],
-                answer: 0
-            },
-            {
-                question: "What is the primary difference between a process and a thread?",
-                options: ["Processes share resources, threads do not", "Threads are part of a process and share its resources", "Processes can execute in parallel, threads cannot", "Threads have their own memory space, processes share memory"],
-                answer: 1
-            },
-            {
-                question: "Which of these is a hardware solution to the critical section problem?",
-                options: ["TestAndSet", "Mutex", "Semaphore", "Barrier"],
-                answer: 0
-            },
-            {
-                question: "Which technique reduces the time taken to access data in memory?",
-                options: ["Caching", "Paging", "Swapping", "Segmentation"],
-                answer: 0
-            },
-            {
-                question: "Which is a non-preemptive scheduling algorithm?",
-                options: ["Round Robin", "Shortest Job First", "Multilevel Queue", "Priority Scheduling"],
-                answer: 1
-            },
-            {
-                question: "What is the main purpose of a device controller?",
-                options: ["To interact directly with the CPU", "To manage a specific type of device", "To allocate memory", "To perform file management"],
-                answer: 1
-            },
-            {
-                question: "Which of the following memory types is the fastest?",
-                options: ["Hard Disk", "RAM", "Cache", "Register"],
-                answer: 3
-            },
-            {
-                question: "Which of these is not a function of the operating system?",
-                options: ["Process management", "Memory management", "Network management", "Application development"],
-                answer: 3
-            },
-            {
-                question: "What is the advantage of using multiprocessor systems?",
-                options: ["Lower cost", "Reduced power consumption", "Increased throughput", "Simpler design"],
-                answer: 2
-            },
-            {
-                question: "Which is not a valid state of a process?",
-                options: ["New", "Running", "Swapping", "Terminated"],
-                answer: 2
-            },
-            {
-                question: "Which scheduling algorithm gives preference to the process that arrives first?",
-                options: ["First Come First Serve", "Shortest Job First", "Priority Scheduling", "Round Robin"],
-                answer: 0
-            },
-            {
-                question: "What is the purpose of the operating system's security module?",
-                options: ["To manage files", "To protect the system from unauthorized access", "To control memory allocation", "To schedule processes"],
-                answer: 1
-            },
-            {
-                question: "Which of the following is used to avoid deadlock?",
-                options: ["Mutexes", "Banker's algorithm", "Semaphores", "Critical section"],
-                answer: 1
-            },
-            {
-                question: "Which of the following is an example of a high-level system call?",
-                options: ["CreateProcess()", "read()", "fork()", "write()"],
-                answer: 0
-            },
-            {
-                question: "What does RAID stand for?",
-                options: ["Redundant Array of Inexpensive Disks", "Random Access Input Disk", "Real-time Array of Independent Disks", "Reduced Access Input Data"],
-                answer: 0
-            },
-            {
-                question: "Which of the following is an example of a time-sharing operating system?",
-                options: ["DOS", "Windows XP", "Linux", "UNIX"],
-                answer: 3
-            },
-            {
-                question: "Which of the following scheduling algorithms can lead to starvation?",
-                options: ["First Come First Serve", "Shortest Job First", "Round Robin", "Multilevel Queue"],
-                answer: 1
-            },
-            {
-                question: "What is the main advantage of using a virtual machine?",
-                options: ["Simplified hardware", "Improved security and isolation", "Faster execution", "Simplified application development"],
-                answer: 1
-            },
-            {
-                question: "Which type of memory is used for cache?",
-                options: ["DRAM", "SRAM", "EPROM", "Flash Memory"],
-                answer: 1
-            },
-            {
-                question: "Which of the following is true about spooling?",
-                options: ["It is a method of buffering data", "It is used for memory management", "It is a technique for managing CPU scheduling", "It is used for file management"],
-                answer: 0
-            },
-            {
-                question: "Which of the following is a feature of the monolithic kernel?",
-                options: ["All system services run in the user space", "All system services run in kernel space", "It has minimal functionality", "It is divided into microservices"],
-                answer: 1
-            },
-            {
-                question: "Which of the following is used to ensure mutual exclusion?",
-                options: ["Semaphores", "Pipes", "Message Passing", "Signals"],
-                answer: 0
-            },
-            {
-                question: "What is a system call?",
-                options: ["A method of passing control from the OS to a process", "A method of passing control from a process to the OS", "A signal to the OS to perform hardware maintenance", "A technique for CPU scheduling"],
-                answer: 1
-            },
-            {
-                question: "Which type of operating system architecture uses the least amount of kernel mode code?",
-                options: ["Microkernel", "Monolithic Kernel", "Layered Kernel", "Exokernel"],
-                answer: 0
-            },
-            {
-                question: "Which is a type of access control method in operating systems?",
-                options: ["ACL (Access Control List)", "FTP", "HTTP", "SMTP"],
-                answer: 0
-            },
-            {
-                question: "What is the main function of an I/O controller?",
-                options: ["To manage the CPU", "To manage the memory", "To handle input/output operations", "To manage the file system"],
-                answer: 2
-            },
-            {
-                question: "Which of the following is not a layer in the OSI model?",
-                options: ["Transport", "Application", "Session", "Resource"],
-                answer: 3
-            },
-            {
-                question: "Which is an advantage of symmetric multiprocessing?",
-                options: ["Lower power consumption", "Higher reliability", "Improved security", "Simpler software development"],
-                answer: 1
-            },
-            {
-                question: "Which of the following is not a scheduling criterion?",
-                options: ["CPU utilization", "Response time", "Throughput", "Program size"],
-                answer: 3
-            },
-            {
-                question: "Which is an example of a non-volatile memory?",
-                options: ["RAM", "Cache", "Hard Disk", "Register"],
-                answer: 2
-            },
-            {
-                question: "What is the primary goal of an operating system's memory management?",
-                options: ["To manage the CPU", "To manage processes", "To optimize the use of the computer's memory", "To manage file systems"],
-                answer: 2
-            },
-            {
-                question: "Which is a real-time operating system?",
-                options: ["Windows 7", "VxWorks", "macOS", "Linux"],
-                answer: 1
-            },
-            {
-                question: "Which of these is a key advantage of virtual memory?",
-                options: ["Simplified hardware", "Increased security", "Larger logical address space", "Improved execution speed"],
-                answer: 2
-            },
-            {
-                question: "What is the role of the dispatcher in an operating system?",
-                options: ["To manage memory", "To assign CPU to a process", "To handle file operations", "To manage network connections"],
-                answer: 1
-            },
-            {
-                question: "What is the main purpose of the memory hierarchy in a computer system?",
-                options: ["To increase storage capacity", "To reduce access time", "To simplify memory management", "To reduce power consumption"],
-                answer: 1
-            },
-            {
-                question: "Which of these is an example of a critical section problem?",
-                options: ["Two processes accessing shared data simultaneously", "A process waiting for I/O", "A process being interrupted", "A process entering an infinite loop"],
-                answer: 0
-            },
-            {
-                question: "Which of the following best describes the function of a device driver?",
-                options: ["To manage network connections", "To interface with a specific type of hardware", "To handle process scheduling", "To manage memory allocation"],
-                answer: 1
-            },
-            {
-                question: "Which of the following is true about virtual memory?",
-                options: ["It provides an illusion of a large physical memory", "It is always faster than physical memory", "It eliminates the need for physical memory", "It is stored on the CPU"],
-                answer: 0
-            },
-            {
-                question: "Which scheduling algorithm is used in a system that needs to minimize waiting time?",
-                options: ["First Come First Serve", "Round Robin", "Shortest Job First", "Priority Scheduling"],
-                answer: 2
-            },
-            {
-                question: "What is the purpose of the command interpreter in an operating system?",
-                options: ["To manage files", "To schedule tasks", "To handle user commands", "To manage memory"],
-                answer: 2
-            },
-            {
-                question: "Which of the following is not an attribute of a file?",
-                options: ["Name", "Type", "Size", "Color"],
-                answer: 3
-            },
-            {
-                question: "Which of the following describes a logical address?",
-                options: ["An address in the physical memory", "An address generated by the CPU", "An address used by the hardware", "An address used for file management"],
-                answer: 1
-            },
-            {
-                question: "Which of these is a feature of a preemptive scheduling algorithm?",
-                options: ["It does not allow process switching", "It allows the system to preempt a process", "It schedules tasks in a non-priority order", "It only works in real-time systems"],
-                answer: 1
-            },
-            {
-                question: "What does the access control list (ACL) in an operating system define?",
-                options: ["The types of processes in the system", "The access rights of users to resources", "The network connections available", "The scheduling policy"],
-                answer: 1
-            },
-            {
-                question: "Which of the following is an example of a file system?",
-                options: ["NTFS", "TCP/IP", "DNS", "HTTP"],
-                answer: 0
-            },
-            {
-                question: "Which of the following best describes deadlock?",
-                options: ["A situation where a process is terminated", "A situation where two or more processes wait for each other indefinitely", "A process waiting for I/O", "A process in an infinite loop"],
-                answer: 1
-            },
-            {
-                question: "Which of the following is true about a multi-core processor?",
-                options: ["It has multiple CPUs on a single chip", "It can only run a single process at a time", "It is slower than a single-core processor", "It cannot run multiple threads simultaneously"],
-                answer: 0
-            },
-            {
-                question: "What is the main advantage of using paging in memory management?",
-                options: ["Reduced complexity", "Improved speed", "Elimination of fragmentation", "Simplified hardware"],
-                answer: 2
-            },
-            {
-                question: "Which is an example of a user-level thread?",
-                options: ["Java thread", "Linux process", "Windows service", "UNIX daemon"],
-                answer: 0
-            },
-            {
-                question: "What does the term 'throughput' refer to in operating systems?",
-                options: ["The number of processes completed per time unit", "The amount of memory used", "The time a process takes to execute", "The speed of the CPU"],
-                answer: 0
-            },
-            {
-                question: "Which of the following is a reason for a process to be blocked?",
-                options: ["Waiting for CPU", "Waiting for I/O", "Waiting for memory", "Waiting for network"],
-                answer: 1
-            },
-            {
-                question: "Which of the following is not a benefit of using a layered approach in an operating system?",
-                options: ["Modularity", "Simplified design", "Improved performance", "Easy debugging"],
-                answer: 2
-            },
-            {
-                question: "What is the purpose of a 'ready queue' in process scheduling?",
-                options: ["To hold processes waiting for I/O", "To hold processes that are ready to execute", "To manage CPU utilization", "To allocate memory to processes"],
-                answer: 1
-            },
-            {
-                question: "Which of the following is not a characteristic of a real-time operating system?",
-                options: ["Deterministic behavior", "Guaranteed response times", "Supports multitasking", "Has high throughput"],
-                answer: 3
-            },
-            {
-                question: "What is the main function of a file system?",
-                options: ["To manage files and directories", "To allocate memory", "To control hardware devices", "To manage network connections"],
-                answer: 0
-            },
-            {
-                question: "What is the primary difference between logical and physical addresses?",
-                options: ["Logical addresses are used by hardware, physical addresses are used by software", "Logical addresses are generated by the CPU, physical addresses refer to actual locations in memory", "Logical addresses are in the hard disk, physical addresses are in the RAM", "There is no difference"],
-                answer: 1
-            },
-            {
-                question: "Which of the following is a technique used to prevent deadlock?",
-                options: ["Starvation", "Priority inversion", "Banker's algorithm", "Round-robin scheduling"],
-                answer: 2
-            },
-            {
-                question: "Which scheduling algorithm always executes the process with the smallest estimated run-time first?",
-                options: ["First Come First Serve", "Shortest Job First", "Round Robin", "Priority Scheduling"],
-                answer: 1
-            },
-            {
-                question: "Which of the following best describes mutual exclusion?",
-                options: ["Two processes can enter a critical section simultaneously", "A process cannot enter a critical section if another process is already in it", "Multiple processes can share resources without any restrictions", "Processes cannot be interrupted while in a critical section"],
-                answer: 1
-            },
-            {
-                question: "Which of the following is a feature of a monolithic kernel?",
-                options: ["Modular design", "Microservices architecture", "All services run in kernel mode", "Minimal functionality"],
-                answer: 2
-            },
-            {
-                question: "Which of the following is a drawback of using a monolithic kernel?",
-                options: ["Higher security", "Increased performance", "Complex and difficult to maintain", "Simpler design"],
-                answer: 2
-            },
-            {
-                question: "Which of the following is a function of the shell in an operating system?",
-                options: ["Memory management", "Process scheduling", "Command interpretation", "Device management"],
-                answer: 2
-            },
-            {
-                question: "Which of the following is not a type of system call?",
-                options: ["Process control", "File manipulation", "Device management", "User management"],
-                answer: 3
-            },
-            {
-                question: "Which type of memory is the fastest?",
-                options: ["RAM", "Cache", "Register", "Hard Disk"],
-                answer: 2
-            },
-            {
-                question: "Which of the following is a disadvantage of using paging for memory management?",
-                options: ["Increased complexity", "Increased fragmentation", "Increased memory access time", "Decreased memory utilization"],
-                answer: 2
-            },
-            {
-                question: "Which of the following is true about the critical section problem?",
-                options: ["It only occurs in single-threaded processes", "It is a problem of ensuring no two processes can access shared data simultaneously", "It is solved by multitasking", "It does not require any special synchronization mechanism"],
-                answer: 1
-            },
-            {
-                question: "Which of the following is a characteristic of a microkernel?",
-                options: ["Large code base", "Runs most services in user space", "All services run in kernel mode", "Monolithic design"],
-                answer: 1
-            },
-            {
-                question: "Which of the following is true about swapping?",
-                options: ["It moves entire processes between main memory and secondary storage", "It swaps memory pages to optimize performance", "It is used to manage hardware resources", "It swaps CPU tasks"],
-                answer: 0
-            },
-            {
-                question: "Which of the following is a non-preemptive scheduling algorithm?",
-                options: ["Round Robin", "First Come First Serve", "Priority Scheduling", "Multilevel Queue"],
-                answer: 1
-            },
-            {
-                question: "Which of the following is a characteristic of a layered operating system?",
-                options: ["Complex and difficult to debug", "Each layer depends on the layer above it", "Each layer only interacts with the layer directly above or below it", "All layers are tightly integrated"],
-                answer: 2
-            },
-            {
-                question: "Which of the following is an example of a distributed operating system?",
-                options: ["UNIX", "Windows XP", "Amoeba", "macOS"],
-                answer: 2
-            },
-            {
-                question: "Which of the following is a reason for using a multi-threaded program?",
-                options: ["Simplified code", "Better use of system resources", "Easier debugging", "Reduced complexity"],
-                answer: 1
-            },
-            {
-                question: "Which of the following is not a function of the kernel?",
-                options: ["Process management", "Memory management", "User interface management", "Device management"],
-                answer: 2
-            },
-            {
-                question: "Which of the following is true about symmetric multiprocessing?",
-                options: ["All processors share a common memory space", "Each processor has its own memory", "It is less efficient than asymmetric multiprocessing", "It only supports a single process at a time"],
-                answer: 0
-            },
-            {
-                question: "Which of the following is true about interrupts?",
-                options: ["They are generated by the CPU", "They allow the CPU to handle asynchronous events", "They are ignored by the operating system", "They only occur in user mode"],
-                answer: 1
-            },
-            {
-                question: "Which of the following is true about a clustered system?",
-                options: ["It consists of multiple systems working together", "It uses a single CPU", "It cannot handle large workloads", "It is less reliable than a single system"],
-                answer: 0
-            },
-            {
-                question: "Which of the following best describes an interrupt service routine (ISR)?",
-                options: ["A routine that is called when a process terminates", "A routine that handles hardware and software interrupts", "A routine that manages memory allocation", "A routine that schedules processes"],
-                answer: 1
-            },
-            {
-                question: "Which of the following is a benefit of using virtual memory?",
-                options: ["Increased memory speed", "Reduced system complexity", "Ability to run larger programs than physical memory allows", "Simplified hardware design"],
-                answer: 2
-            },
-            {
-                question: "Which of the following best describes a semaphore?",
-                options: ["A hardware interrupt", "A software mechanism for process synchronization", "A memory management technique", "A type of file system"],
-                answer: 1
-            },
-            {
-                question: "Which of the following is not a component of an operating system?",
-                options: ["File management", "Memory management", "Process management", "Database management"],
-                answer: 3
-            },
-            {
-                question: "Which of the following is true about non-volatile memory?",
-                options: ["It retains data even when power is turned off", "It is faster than volatile memory", "It is used for temporary storage", "It is primarily used in the CPU"],
-                answer: 0
-            },
-            {
-                question: "Which of the following is true about the role of a process scheduler?",
-                options: ["It allocates memory to processes", "It determines which process runs next", "It manages file systems", "It handles user commands"],
-                answer: 1
-            },
-            {
-                question: "Which of the following is a function of the operating system's memory management module?",
-                options: ["Allocating and deallocating memory", "Scheduling processes", "Managing I/O devices", "Interpreting user commands"],
-                answer: 0
-            },
-            {
-                question: "Which of the following is true about a process control block (PCB)?",
-                options: ["It contains information about a process", "It manages memory allocation", "It is part of the hardware", "It is used for file management"],
-                answer: 0
-            },
-            {
-                question: "Which of the following is an example of a time-sharing system?",
-                options: ["Single-user system", "Batch processing system", "Multi-user system", "Real-time system"],
-                answer: 2
-            },
-            {
-                question: "Which of the following is true about a deadlock?",
-                options: ["It occurs when two or more processes are waiting indefinitely for an event", "It is a temporary condition that is easily resolved", "It improves system performance", "It only occurs in single-user systems"],
-                answer: 0
-            },
-            {
-                question: "Which of the following is true about a virtual machine?",
-                options: ["It runs directly on the physical hardware", "It is an emulation of a physical computer", "It cannot run multiple processes", "It does not require an operating system"],
-                answer: 1
-            },
-            {
-                question: "Which of the following is a characteristic of a real-time operating system?",
-                options: ["Guaranteed response times", "Supports multitasking", "Provides high throughput", "Supports batch processing"],
-                answer: 0
-            },
-            {
-                question: "Which of the following is true about file systems?",
-                options: ["They manage the storage and retrieval of data on a disk", "They are only used in real-time operating systems", "They do not support file permissions", "They do not affect system performance"],
-                answer: 0
-            },
-            {
-                question: "Which of the following is true about system calls?",
-                options: ["They are used to request services from the operating system", "They are only used in kernel mode", "They are only used in multi-user systems", "They cannot be interrupted"],
-                answer: 0
-            },
-            {
-                question: "Which of the following is a benefit of using a microkernel?",
-                options: ["Increased security and stability", "Faster performance", "Simpler design", "Increased memory usage"],
-                answer: 0
-            },
-            {
-                question: "Which of the following is not true about interrupts?",
-                options: ["They can be hardware or software-based", "They allow the operating system to respond to events", "They occur at regular intervals", "They can occur at any time"],
-                answer: 2
-            },
-            {
-                question: "Which of the following best describes the purpose of the kernel in an operating system?",
-                options: ["To manage hardware and software resources", "To interpret user commands", "To schedule processes", "To manage files"],
-                answer: 0
-            }
-        ];
+        {
+            question: "What is an Operating System?",
+            options: ["A hardware component", "A software that manages computer resources", "An application program", "A database system"],
+            answer: 1
+        },
+        {
+            question: "Which of the following is a type of system call?",
+            options: ["Process control", "File management", "Device management", "All of the above"],
+            answer: 3
+        },
 
-        function toggleNightMode() {
-            document.body.classList.toggle("night-mode");
+        {
+            question: "Which of the following is not a function of the operating system?",
+            options: ["Memory management", "Disk management", "Virus protection", "File management"],
+            answer: 2
+        },
+        {
+            question: "What does CPU scheduling manage?",
+            options: ["Execution of processes", "Memory allocation", "File handling", "Networking"],
+            answer: 0
+        },
+        {
+            question: "In what mode does the OS run user applications?",
+            options: ["Kernel mode", "User mode", "Privileged mode", "Administrative mode"],
+            answer: 1
+        },
+        {
+            question: "Which part of the OS is always running?",
+            options: ["Shell", "Device driver", "Kernel", "Application program"],
+            answer: 2
+        },
+        {
+            question: "What does the 'trap' do in the operating system?",
+            options: ["Shuts down the system", "Interrupts a running process", "Handles errors or exceptions", "Schedules the next process"],
+            answer: 2
+        },
+        {
+            question: "What does the process control block (PCB) contain?",
+            options: ["Program code", "Process state", "CPU registers", "All of the above"],
+            answer: 3
+        },
+        {
+            question: "Which of the following is true about time-sharing systems?",
+            options: ["They allow multiple users to interact with a computer at the same time", "They only support batch processing", "They are less efficient than single-task systems", "They do not allow process switching"],
+            answer: 0
+        },
+        {
+            question: "Which of the following is not a component of the CPU?",
+            options: ["Arithmetic Logic Unit (ALU)", "Control Unit", "Memory", "Registers"],
+            answer: 2
+        },
+        {
+            question: "What does virtual memory allow?",
+            options: ["Execution of programs larger than the physical memory", "Faster CPU operation", "Direct access to the hard drive", "Running only one process at a time"],
+            answer: 0
+        },
+        {
+            question: "Which of the following is an example of a multi-user operating system?",
+            options: ["MS-DOS", "Windows 10", "UNIX", "Android"],
+            answer: 2
+        },
+        {
+            question: "Which scheduling algorithm allows the longest jobs to be done first?",
+            options: ["Shortest Job First (SJF)", "First Come First Serve (FCFS)", "Priority Scheduling", "Last Job First"],
+            answer: 0
+        },
+        {
+            question: "Which of these is a non-preemptive scheduling algorithm?",
+            options: ["Round Robin", "First Come First Serve", "Priority Scheduling", "Multilevel Queue"],
+            answer: 1
+        },
+        {
+            question: "What is a deadlock in operating systems?",
+            options: ["A process is terminated unexpectedly", "Two or more processes are stuck waiting for each other", "A program runs indefinitely", "A CPU crash"],
+            answer: 1
+        },
+        {
+            question: "What is the purpose of the file allocation table (FAT)?",
+            options: ["Manage the memory", "Track the location of files on disk", "Control network access", "Handle interrupts"],
+            answer: 1
+        },
+        {
+            question: "What is the primary role of the shell in an operating system?",
+            options: ["To interact with hardware", "To manage memory", "To provide a user interface", "To schedule tasks"],
+            answer: 3
+        },
+        {
+            question: "Which of the following is not an example of a system call?",
+            options: ["open()", "read()", "printf()", "fork()"],
+            answer: 2
+        },
+        {
+            question: "Which memory management scheme requires keeping the entire program in memory at once?",
+            options: ["Paging", "Segmentation", "Contiguous Allocation", "Virtual Memory"],
+            answer: 2
+        },
+        {
+            question: "Which term describes the delay in accessing memory?",
+            options: ["Memory Latency", "Memory Bandwidth", "Memory Throughput", "Memory Allocation"],
+            answer: 0
+        },
+        {
+            question: "In which state is a process waiting for an event to happen?",
+            options: ["Running", "Waiting", "Ready", "Terminated"],
+            answer: 1
+        },
+        {
+            question: "What is thrashing in an operating system?",
+            options: ["Excessive swapping of pages", "Memory leak", "Disk crash", "CPU overheating"],
+            answer: 0
+        },
+        {
+            question: "Which of these is not a layer of the OSI model?",
+            options: ["Application", "Session", "Transport", "Firmware"],
+            answer: 3
+        },
+        {
+            question: "What is the smallest unit of storage in memory?",
+            options: ["Byte", "Bit", "Nibble", "Word"],
+            answer: 1
+        },
+        {
+            question: "Which of the following is a real-time operating system?",
+            options: ["Windows XP", "VxWorks", "Ubuntu", "Linux Mint"],
+            answer: 1
+        },
+        {
+            question: "What does DMA stand for in operating systems?",
+            options: ["Direct Memory Access", "Dual Mode Access", "Dynamic Memory Allocation", "Direct Management Access"],
+            answer: 0
+        },
+        {
+            question: "What is the function of a device driver?",
+            options: ["To control a particular type of device attached to a computer", "To manage memory", "To schedule processes", "To manage network connections"],
+            answer: 0
+        },
+        {
+            question: "Which of the following is not an advantage of multiprogramming?",
+            options: ["Better CPU utilization", "Reduced I/O wait time", "Simpler implementation", "Increased throughput"],
+            answer: 2
+        },
+        {
+            question: "Which is a benefit of using a multi-core processor?",
+            options: ["Increased battery life", "Faster single-thread performance", "Ability to run multiple processes simultaneously", "Reduced heat generation"],
+            answer: 2
+        },
+        {
+            question: "Which is not a type of memory management technique?",
+            options: ["Paging", "Segmentation", "Virtual Memory", "Pipelining"],
+            answer: 3
+        },
+        {
+            question: "Which of these is a characteristic of a microkernel?",
+            options: ["Large and monolithic", "Minimal functionality in the kernel", "No support for multitasking", "Direct control of hardware"],
+            answer: 1
+        },
+        {
+            question: "What is the primary function of the bootstrap program?",
+            options: ["To manage memory", "To load the operating system into memory", "To perform file management", "To initialize the CPU"],
+            answer: 1
+        },
+        {
+            question: "Which of the following is a disadvantage of virtual memory?",
+            options: ["Allows execution of large programs", "Increased system complexity", "Better CPU utilization", "Reduces memory fragmentation"],
+            answer: 1
+        },
+        {
+            question: "What is the primary purpose of the scheduler in an operating system?",
+            options: ["To manage files", "To control access to hardware", "To determine which process runs next", "To handle interrupts"],
+            answer: 3
+        },
+        {
+            question: "Which is an example of preemptive multitasking?",
+            options: ["A single-tasking operating system", "Round-robin scheduling", "First-Come-First-Served (FCFS)", "Priority Scheduling without preemption"],
+            answer: 1
+        },
+        {
+            question: "Which of the following is used to manage concurrent processes?",
+            options: ["Mutexes", "Pipes", "Threads", "All of the above"],
+            answer: 3
+        },
+        {
+            question: "Which of the following is not true about process synchronization?",
+            options: ["It prevents race conditions", "It is necessary for concurrent processes", "It always improves system performance", "It can lead to deadlock if not handled properly"],
+            answer: 2
+        },
+        {
+            question: "Which of the following is true about interrupts?",
+            options: ["They are used to signal the occurrence of an event", "They are generated by the operating system only", "They do not affect the current process", "They are handled by the user mode"],
+            answer: 0
+        },
+        {
+            question: "Which of the following is a non-volatile storage device?",
+            options: ["RAM", "Cache", "SSD", "Registers"],
+            answer: 2
+        },
+        {
+            question: "What is the purpose of the swap space in an operating system?",
+            options: ["To store user files", "To provide additional memory by swapping data to disk", "To store the kernel", "To manage file systems"],
+            answer: 1
+        },
+        {
+            question: "What is a context switch?",
+            options: ["Changing from one user to another", "Saving the state of a process and loading the state of another", "Starting a new application", "Shutting down the operating system"],
+            answer: 1
+        },
+        {
+            question: "Which scheduling algorithm is ideal for time-shared systems?",
+            options: ["Shortest Job First", "Round Robin", "First Come First Serve", "Priority Scheduling"],
+            answer: 1
+        },
+        {
+            question: "What is the role of a system call in an operating system?",
+            options: ["To manage hardware devices", "To provide an interface between a process and the operating system", "To schedule tasks", "To allocate memory"],
+            answer: 1
+        },
+        {
+            question: "Which of the following does not cause a context switch?",
+            options: ["I/O operation", "Interrupt", "System call", "Page fault"],
+            answer: 0
+        },
+        {
+            question: "What is the primary difference between a process and a thread?",
+            options: ["Processes share resources, threads do not", "Threads are part of a process and share its resources", "Processes can execute in parallel, threads cannot", "Threads have their own memory space, processes share memory"],
+            answer: 1
+        },
+        {
+            question: "Which of these is a hardware solution to the critical section problem?",
+            options: ["TestAndSet", "Mutex", "Semaphore", "Barrier"],
+            answer: 0
+        },
+        {
+            question: "Which technique reduces the time taken to access data in memory?",
+            options: ["Caching", "Paging", "Swapping", "Segmentation"],
+            answer: 0
+        },
+        {
+            question: "Which is a non-preemptive scheduling algorithm?",
+            options: ["Round Robin", "Shortest Job First", "Multilevel Queue", "Priority Scheduling"],
+            answer: 1
+        },
+        {
+            question: "What is the main purpose of a device controller?",
+            options: ["To interact directly with the CPU", "To manage a specific type of device", "To allocate memory", "To perform file management"],
+            answer: 1
+        },
+        {
+            question: "Which of the following memory types is the fastest?",
+            options: ["Hard Disk", "RAM", "Cache", "Register"],
+            answer: 3
+        },
+        {
+            question: "Which of these is not a function of the operating system?",
+            options: ["Process management", "Memory management", "Network management", "Application development"],
+            answer: 3
+        },
+        {
+            question: "What is the advantage of using multiprocessor systems?",
+            options: ["Lower cost", "Reduced power consumption", "Increased throughput", "Simpler design"],
+            answer: 2
+        },
+        {
+            question: "Which is not a valid state of a process?",
+            options: ["New", "Running", "Swapping", "Terminated"],
+            answer: 2
+        },
+        {
+            question: "Which scheduling algorithm gives preference to the process that arrives first?",
+            options: ["First Come First Serve", "Shortest Job First", "Priority Scheduling", "Round Robin"],
+            answer: 0
+        },
+        {
+            question: "What is the purpose of the operating system's security module?",
+            options: ["To manage files", "To protect the system from unauthorized access", "To control memory allocation", "To schedule processes"],
+            answer: 1
+        },
+        {
+            question: "Which of the following is used to avoid deadlock?",
+            options: ["Mutexes", "Banker's algorithm", "Semaphores", "Critical section"],
+            answer: 1
+        },
+        {
+            question: "Which of the following is an example of a high-level system call?",
+            options: ["CreateProcess()", "read()", "fork()", "write()"],
+            answer: 0
+        },
+        {
+            question: "What does RAID stand for?",
+            options: ["Redundant Array of Inexpensive Disks", "Random Access Input Disk", "Real-time Array of Independent Disks", "Reduced Access Input Data"],
+            answer: 0
+        },
+        {
+            question: "Which of the following is an example of a time-sharing operating system?",
+            options: ["DOS", "Windows XP", "Linux", "UNIX"],
+            answer: 3
+        },
+        {
+            question: "Which of the following scheduling algorithms can lead to starvation?",
+            options: ["First Come First Serve", "Shortest Job First", "Round Robin", "Multilevel Queue"],
+            answer: 1
+        },
+        {
+            question: "What is the main advantage of using a virtual machine?",
+            options: ["Simplified hardware", "Improved security and isolation", "Faster execution", "Simplified application development"],
+            answer: 1
+        },
+        {
+            question: "Which type of memory is used for cache?",
+            options: ["DRAM", "SRAM", "EPROM", "Flash Memory"],
+            answer: 1
+        },
+        {
+            question: "Which of the following is true about spooling?",
+            options: ["It is a method of buffering data", "It is used for memory management", "It is a technique for managing CPU scheduling", "It is used for file management"],
+            answer: 0
+        },
+        {
+            question: "Which of the following is a feature of the monolithic kernel?",
+            options: ["All system services run in the user space", "All system services run in kernel space", "It has minimal functionality", "It is divided into microservices"],
+            answer: 1
+        },
+        {
+            question: "Which of the following is used to ensure mutual exclusion?",
+            options: ["Semaphores", "Pipes", "Message Passing", "Signals"],
+            answer: 0
+        },
+        {
+            question: "What is a system call?",
+            options: ["A method of passing control from the OS to a process", "A method of passing control from a process to the OS", "A signal to the OS to perform hardware maintenance", "A technique for CPU scheduling"],
+            answer: 1
+        },
+        {
+            question: "Which type of operating system architecture uses the least amount of kernel mode code?",
+            options: ["Microkernel", "Monolithic Kernel", "Layered Kernel", "Exokernel"],
+            answer: 0
+        },
+        {
+            question: "Which is a type of access control method in operating systems?",
+            options: ["ACL (Access Control List)", "FTP", "HTTP", "SMTP"],
+            answer: 0
+        },
+        {
+            question: "What is the main function of an I/O controller?",
+            options: ["To manage the CPU", "To manage the memory", "To handle input/output operations", "To manage the file system"],
+            answer: 2
+        },
+        {
+            question: "Which of the following is not a layer in the OSI model?",
+            options: ["Transport", "Application", "Session", "Resource"],
+            answer: 3
+        },
+        {
+            question: "Which is an advantage of symmetric multiprocessing?",
+            options: ["Lower power consumption", "Higher reliability", "Improved security", "Simpler software development"],
+            answer: 1
+        },
+        {
+            question: "Which of the following is not a scheduling criterion?",
+            options: ["CPU utilization", "Response time", "Throughput", "Program size"],
+            answer: 3
+        },
+        {
+            question: "Which is an example of a non-volatile memory?",
+            options: ["RAM", "Cache", "Hard Disk", "Register"],
+            answer: 2
+        },
+        {
+            question: "What is the primary goal of an operating system's memory management?",
+            options: ["To manage the CPU", "To manage processes", "To optimize the use of the computer's memory", "To manage file systems"],
+            answer: 2
+        },
+        {
+            question: "Which is a real-time operating system?",
+            options: ["Windows 7", "VxWorks", "macOS", "Linux"],
+            answer: 1
+        },
+        {
+            question: "Which of these is a key advantage of virtual memory?",
+            options: ["Simplified hardware", "Increased security", "Larger logical address space", "Improved execution speed"],
+            answer: 2
+        },
+        {
+            question: "What is the role of the dispatcher in an operating system?",
+            options: ["To manage memory", "To assign CPU to a process", "To handle file operations", "To manage network connections"],
+            answer: 1
+        },
+        {
+            question: "What is the main purpose of the memory hierarchy in a computer system?",
+            options: ["To increase storage capacity", "To reduce access time", "To simplify memory management", "To reduce power consumption"],
+            answer: 1
+        },
+        {
+            question: "Which of these is an example of a critical section problem?",
+            options: ["Two processes accessing shared data simultaneously", "A process waiting for I/O", "A process being interrupted", "A process entering an infinite loop"],
+            answer: 0
+        },
+        {
+            question: "Which of the following best describes the function of a device driver?",
+            options: ["To manage network connections", "To interface with a specific type of hardware", "To handle process scheduling", "To manage memory allocation"],
+            answer: 1
+        },
+        {
+            question: "Which of the following is true about virtual memory?",
+            options: ["It provides an illusion of a large physical memory", "It is always faster than physical memory", "It eliminates the need for physical memory", "It is stored on the CPU"],
+            answer: 0
+        },
+        {
+            question: "Which scheduling algorithm is used in a system that needs to minimize waiting time?",
+            options: ["First Come First Serve", "Round Robin", "Shortest Job First", "Priority Scheduling"],
+            answer: 2
+        },
+        {
+            question: "What is the purpose of the command interpreter in an operating system?",
+            options: ["To manage files", "To schedule tasks", "To handle user commands", "To manage memory"],
+            answer: 2
+        },
+        {
+            question: "Which of the following is not an attribute of a file?",
+            options: ["Name", "Type", "Size", "Color"],
+            answer: 3
+        },
+        {
+            question: "Which of the following describes a logical address?",
+            options: ["An address in the physical memory", "An address generated by the CPU", "An address used by the hardware", "An address used for file management"],
+            answer: 1
+        },
+        {
+            question: "Which of these is a feature of a preemptive scheduling algorithm?",
+            options: ["It does not allow process switching", "It allows the system to preempt a process", "It schedules tasks in a non-priority order", "It only works in real-time systems"],
+            answer: 1
+        },
+        {
+            question: "What does the access control list (ACL) in an operating system define?",
+            options: ["The types of processes in the system", "The access rights of users to resources", "The network connections available", "The scheduling policy"],
+            answer: 1
+        },
+        {
+            question: "Which of the following is an example of a file system?",
+            options: ["NTFS", "TCP/IP", "DNS", "HTTP"],
+            answer: 0
+        },
+        {
+            question: "Which of the following best describes deadlock?",
+            options: ["A situation where a process is terminated", "A situation where two or more processes wait for each other indefinitely", "A process waiting for I/O", "A process in an infinite loop"],
+            answer: 1
+        },
+        {
+            question: "Which of the following is true about a multi-core processor?",
+            options: ["It has multiple CPUs on a single chip", "It can only run a single process at a time", "It is slower than a single-core processor", "It cannot run multiple threads simultaneously"],
+            answer: 0
+        },
+        {
+            question: "What is the main advantage of using paging in memory management?",
+            options: ["Reduced complexity", "Improved speed", "Elimination of fragmentation", "Simplified hardware"],
+            answer: 2
+        },
+        {
+            question: "Which is an example of a user-level thread?",
+            options: ["Java thread", "Linux process", "Windows service", "UNIX daemon"],
+            answer: 0
+        },
+        {
+            question: "What does the term 'throughput' refer to in operating systems?",
+            options: ["The number of processes completed per time unit", "The amount of memory used", "The time a process takes to execute", "The speed of the CPU"],
+            answer: 0
+        },
+        {
+            question: "Which of the following is a reason for a process to be blocked?",
+            options: ["Waiting for CPU", "Waiting for I/O", "Waiting for memory", "Waiting for network"],
+            answer: 1
+        },
+        {
+            question: "Which of the following is not a benefit of using a layered approach in an operating system?",
+            options: ["Modularity", "Simplified design", "Improved performance", "Easy debugging"],
+            answer: 2
+        },
+        {
+            question: "What is the purpose of a 'ready queue' in process scheduling?",
+            options: ["To hold processes waiting for I/O", "To hold processes that are ready to execute", "To manage CPU utilization", "To allocate memory to processes"],
+            answer: 1
+        },
+        {
+            question: "Which of the following is not a characteristic of a real-time operating system?",
+            options: ["Deterministic behavior", "Guaranteed response times", "Supports multitasking", "Has high throughput"],
+            answer: 3
+        },
+        {
+            question: "What is the main function of a file system?",
+            options: ["To manage files and directories", "To allocate memory", "To control hardware devices", "To manage network connections"],
+            answer: 0
+        },
+        {
+            question: "What is the primary difference between logical and physical addresses?",
+            options: ["Logical addresses are used by hardware, physical addresses are used by software", "Logical addresses are generated by the CPU, physical addresses refer to actual locations in memory", "Logical addresses are in the hard disk, physical addresses are in the RAM", "There is no difference"],
+            answer: 1
+        },
+        {
+            question: "Which of the following is a technique used to prevent deadlock?",
+            options: ["Starvation", "Priority inversion", "Banker's algorithm", "Round-robin scheduling"],
+            answer: 2
+        },
+        {
+            question: "Which scheduling algorithm always executes the process with the smallest estimated run-time first?",
+            options: ["First Come First Serve", "Shortest Job First", "Round Robin", "Priority Scheduling"],
+            answer: 1
+        },
+        {
+            question: "Which of the following best describes mutual exclusion?",
+            options: ["Two processes can enter a critical section simultaneously", "A process cannot enter a critical section if another process is already in it", "Multiple processes can share resources without any restrictions", "Processes cannot be interrupted while in a critical section"],
+            answer: 1
+        },
+        {
+            question: "Which of the following is a feature of a monolithic kernel?",
+            options: ["Modular design", "Microservices architecture", "All services run in kernel mode", "Minimal functionality"],
+            answer: 2
+        },
+        {
+            question: "Which of the following is a drawback of using a monolithic kernel?",
+            options: ["Higher security", "Increased performance", "Complex and difficult to maintain", "Simpler design"],
+            answer: 2
+        },
+        {
+            question: "Which of the following is a function of the shell in an operating system?",
+            options: ["Memory management", "Process scheduling", "Command interpretation", "Device management"],
+            answer: 2
+        },
+        {
+            question: "Which of the following is not a type of system call?",
+            options: ["Process control", "File manipulation", "Device management", "User management"],
+            answer: 3
+        },
+        {
+            question: "Which type of memory is the fastest?",
+            options: ["RAM", "Cache", "Register", "Hard Disk"],
+            answer: 2
+        },
+        {
+            question: "Which of the following is a disadvantage of using paging for memory management?",
+            options: ["Increased complexity", "Increased fragmentation", "Increased memory access time", "Decreased memory utilization"],
+            answer: 2
+        },
+        {
+            question: "Which of the following is true about the critical section problem?",
+            options: ["It only occurs in single-threaded processes", "It is a problem of ensuring no two processes can access shared data simultaneously", "It is solved by multitasking", "It does not require any special synchronization mechanism"],
+            answer: 1
+        },
+        {
+            question: "Which of the following is a characteristic of a microkernel?",
+            options: ["Large code base", "Runs most services in user space", "All services run in kernel mode", "Monolithic design"],
+            answer: 1
+        },
+        {
+            question: "Which of the following is true about swapping?",
+            options: ["It moves entire processes between main memory and secondary storage", "It swaps memory pages to optimize performance", "It is used to manage hardware resources", "It swaps CPU tasks"],
+            answer: 0
+        },
+        {
+            question: "Which of the following is a non-preemptive scheduling algorithm?",
+            options: ["Round Robin", "First Come First Serve", "Priority Scheduling", "Multilevel Queue"],
+            answer: 1
+        },
+        {
+            question: "Which of the following is a characteristic of a layered operating system?",
+            options: ["Complex and difficult to debug", "Each layer depends on the layer above it", "Each layer only interacts with the layer directly above or below it", "All layers are tightly integrated"],
+            answer: 2
+        },
+        {
+            question: "Which of the following is an example of a distributed operating system?",
+            options: ["UNIX", "Windows XP", "Amoeba", "macOS"],
+            answer: 2
+        },
+        {
+            question: "Which of the following is a reason for using a multi-threaded program?",
+            options: ["Simplified code", "Better use of system resources", "Easier debugging", "Reduced complexity"],
+            answer: 1
+        },
+        {
+            question: "Which of the following is not a function of the kernel?",
+            options: ["Process management", "Memory management", "User interface management", "Device management"],
+            answer: 2
+        },
+        {
+            question: "Which of the following is true about symmetric multiprocessing?",
+            options: ["All processors share a common memory space", "Each processor has its own memory", "It is less efficient than asymmetric multiprocessing", "It only supports a single process at a time"],
+            answer: 0
+        },
+        {
+            question: "Which of the following is true about interrupts?",
+            options: ["They are generated by the CPU", "They allow the CPU to handle asynchronous events", "They are ignored by the operating system", "They only occur in user mode"],
+            answer: 1
+        },
+        {
+            question: "Which of the following is true about a clustered system?",
+            options: ["It consists of multiple systems working together", "It uses a single CPU", "It cannot handle large workloads", "It is less reliable than a single system"],
+            answer: 0
+        },
+        {
+            question: "Which of the following best describes an interrupt service routine (ISR)?",
+            options: ["A routine that is called when a process terminates", "A routine that handles hardware and software interrupts", "A routine that manages memory allocation", "A routine that schedules processes"],
+            answer: 1
+        },
+        {
+            question: "Which of the following is a benefit of using virtual memory?",
+            options: ["Increased memory speed", "Reduced system complexity", "Ability to run larger programs than physical memory allows", "Simplified hardware design"],
+            answer: 2
+        },
+        {
+            question: "Which of the following best describes a semaphore?",
+            options: ["A hardware interrupt", "A software mechanism for process synchronization", "A memory management technique", "A type of file system"],
+            answer: 1
+        },
+        {
+            question: "Which of the following is not a component of an operating system?",
+            options: ["File management", "Memory management", "Process management", "Database management"],
+            answer: 3
+        },
+        {
+            question: "Which of the following is true about non-volatile memory?",
+            options: ["It retains data even when power is turned off", "It is faster than volatile memory", "It is used for temporary storage", "It is primarily used in the CPU"],
+            answer: 0
+        },
+        {
+            question: "Which of the following is true about the role of a process scheduler?",
+            options: ["It allocates memory to processes", "It determines which process runs next", "It manages file systems", "It handles user commands"],
+            answer: 1
+        },
+        {
+            question: "Which of the following is a function of the operating system's memory management module?",
+            options: ["Allocating and deallocating memory", "Scheduling processes", "Managing I/O devices", "Interpreting user commands"],
+            answer: 0
+        },
+        {
+            question: "Which of the following is true about a process control block (PCB)?",
+            options: ["It contains information about a process", "It manages memory allocation", "It is part of the hardware", "It is used for file management"],
+            answer: 0
+        },
+        {
+            question: "Which of the following is an example of a time-sharing system?",
+            options: ["Single-user system", "Batch processing system", "Multi-user system", "Real-time system"],
+            answer: 2
+        },
+        {
+            question: "Which of the following is true about a deadlock?",
+            options: ["It occurs when two or more processes are waiting indefinitely for an event", "It is a temporary condition that is easily resolved", "It improves system performance", "It only occurs in single-user systems"],
+            answer: 0
+        },
+        {
+            question: "Which of the following is true about a virtual machine?",
+            options: ["It runs directly on the physical hardware", "It is an emulation of a physical computer", "It cannot run multiple processes", "It does not require an operating system"],
+            answer: 1
+        },
+        {
+            question: "Which of the following is a characteristic of a real-time operating system?",
+            options: ["Guaranteed response times", "Supports multitasking", "Provides high throughput", "Supports batch processing"],
+            answer: 0
+        },
+        {
+            question: "Which of the following is true about file systems?",
+            options: ["They manage the storage and retrieval of data on a disk", "They are only used in real-time operating systems", "They do not support file permissions", "They do not affect system performance"],
+            answer: 0
+        },
+        {
+            question: "Which of the following is true about system calls?",
+            options: ["They are used to request services from the operating system", "They are only used in kernel mode", "They are only used in multi-user systems", "They cannot be interrupted"],
+            answer: 0
+        },
+        {
+            question: "Which of the following is a benefit of using a microkernel?",
+            options: ["Increased security and stability", "Faster performance", "Simpler design", "Increased memory usage"],
+            answer: 0
+        },
+        {
+            question: "Which of the following is not true about interrupts?",
+            options: ["They can be hardware or software-based", "They allow the operating system to respond to events", "They occur at regular intervals", "They can occur at any time"],
+            answer: 2
+        },
+        {
+            question: "Which of the following best describes the purpose of the kernel in an operating system?",
+            options: ["To manage hardware and software resources", "To interpret user commands", "To schedule processes", "To manage files"],
+            answer: 0
         }
+    ];
 
-
-        function getRandomQuestions() {
-            let selectedQuestions = [];
-            while (selectedQuestions.length < 20) {
-                let randomIndex = Math.floor(Math.random() * questions.length);
-                if (!selectedQuestions.includes(questions[randomIndex])) {
-                    selectedQuestions.push(questions[randomIndex]);
-                }
+    function getRandomQuestions() {
+        let selectedQuestions = [];
+        while (selectedQuestions.length < 20) {
+            let randomIndex = Math.floor(Math.random() * questions.length);
+            if (!selectedQuestions.includes(questions[randomIndex])) {
+                selectedQuestions.push(questions[randomIndex]);
             }
-            return selectedQuestions;
         }
+        return selectedQuestions;
+    }
 
-        function displayQuestions() {
-            const questionsContainer = document.getElementById("questions-container");
-            const randomQuestions = getRandomQuestions();
-            randomQuestions.forEach((q, index) => {
-                let questionDiv = document.createElement("div");
-                questionDiv.className = "question";
-                questionDiv.innerHTML = `<p>${index + 1}. ${q.question}</p>`;
-                q.options.forEach((option, i) => {
-                    questionDiv.innerHTML += `
+    function displayQuestions() {
+        const questionsContainer = document.getElementById("questions-container");
+        const randomQuestions = getRandomQuestions();
+        randomQuestions.forEach((q, index) => {
+            let questionDiv = document.createElement("div");
+            questionDiv.className = "question";
+            questionDiv.innerHTML = `<p>${index + 1}. ${q.question}</p>`;
+            q.options.forEach((option, i) => {
+                questionDiv.innerHTML += `
                         <div class="options">
                             <input type="radio" name="question${index}" value="${i}"> ${option}
                         </div>`;
+            });
+            questionsContainer.appendChild(questionDiv);
+        });
+    }
+
+    function submitQuiz() {
+        const username = document.getElementById("username").value;
+        if (!username) {
+            alert("Please enter your name.");
+            return;
+        }
+
+        let score = 0;
+        let correctAnswers = [];
+        let wrongAnswers = [];
+        const form = document.getElementById("quiz-form");
+        const data = new FormData(form);
+        data.forEach((value, key) => {
+            const questionIndex = parseInt(key.replace("question", ""));
+            if (parseInt(value) === questions[questionIndex].answer) {
+                score += 1;
+                correctAnswers.push(questions[questionIndex].question);
+            } else {
+                wrongAnswers.push({
+                    question: questions[questionIndex].question,
+                    selected: questions[questionIndex].options[value],
+                    correct: questions[questionIndex].options[questions[questionIndex].answer]
                 });
-                questionsContainer.appendChild(questionDiv);
+            }
+        });
+
+        const submission = {
+            username: username,
+            score: score,
+            correctAnswers: correctAnswers,
+            wrongAnswers: wrongAnswers
+        };
+
+        let submissions = JSON.parse(localStorage.getItem('submissions')) || [];
+        submissions.push(submission);
+        localStorage.setItem('submissions', JSON.stringify(submissions));
+
+        displaySubmissionList();
+        document.getElementById("result").innerText = `You scored ${score}/20`;
+    }
+
+    function displaySubmissionList() {
+        const submissions = JSON.parse(localStorage.getItem('submissions')) || [];
+        const submissionsList = document.getElementById("submissions-list");
+        submissionsList.innerHTML = ''; // Clear current list
+
+        submissions.forEach((submission, index) => {
+            let listItem = document.createElement("li");
+            listItem.textContent = `${index + 1}. ${submission.username}: Scored ${submission.score}/20`;
+            listItem.onclick = () => displaySubmissionDetail(index);
+            submissionsList.appendChild(listItem);
+        });
+    }
+
+    function displaySubmissionDetail(index) {
+        const submissions = JSON.parse(localStorage.getItem('submissions')) || [];
+        const submission = submissions[index];
+
+        const submissionDetail = document.getElementById("submission-detail");
+        submissionDetail.innerHTML = `<h3>Submission Details</h3>
+                <strong>Name:</strong> ${submission.username}<br>
+                <strong>Score:</strong> ${submission.score}/20<br>`;
+
+        if (submission.correctAnswers.length > 0) {
+            submissionDetail.innerHTML += `<br><strong>Correctly Answered Questions:</strong><ul>`;
+            submission.correctAnswers.forEach(q => {
+                submissionDetail.innerHTML += `<li>${q}</li>`;
             });
+            submissionDetail.innerHTML += `</ul>`;
         }
 
-        function submitQuiz() {
-    const username = document.getElementById("username").value;
-    if (!username) {
-        alert("Please enter your name.");
-        return;
-    }
-
-    let score = 0;
-    let correctAnswers = [];
-    let wrongAnswers = [];
-    const form = document.getElementById("quiz-form");
-    const data = new FormData(form);
-    data.forEach((value, key) => {
-        const questionIndex = parseInt(key.replace("question", ""));
-        if (parseInt(value) === questions[questionIndex].answer) {
-            score += 1;
-            correctAnswers.push(questions[questionIndex].question);
-        } else {
-            wrongAnswers.push({
-                question: questions[questionIndex].question,
-                selected: questions[questionIndex].options[value],
-                correct: questions[questionIndex].options[questions[questionIndex].answer]
+        if (submission.wrongAnswers.length > 0) {
+            submissionDetail.innerHTML += `<br><strong>Incorrectly Answered Questions:</strong><ul>`;
+            submission.wrongAnswers.forEach(w => {
+                submissionDetail.innerHTML += `<li>${w.question}<br>
+                        <strong>Your Answer:</strong> ${w.selected}<br>
+                        <strong>Correct Answer:</strong> ${w.correct}</li>`;
             });
+            submissionDetail.innerHTML += `</ul>`;
         }
-    });
-
-    document.getElementById("result").innerText = `You scored ${score}/20`;
-
-    const submissionDiv = document.createElement("div");
-    submissionDiv.innerHTML = `<strong>${username}:</strong> Scored ${score}/20<br>`;
-
-    // Display correct answers
-    if (correctAnswers.length > 0) {
-        submissionDiv.innerHTML += `<br><strong>Correctly Answered Questions:</strong><ul>`;
-        correctAnswers.forEach(q => {
-            submissionDiv.innerHTML += `<li>${q}</li>`;
-        });
-        submissionDiv.innerHTML += `</ul>`;
     }
 
-    // Display wrong answers with correct and selected options
-    if (wrongAnswers.length > 0) {
-        submissionDiv.innerHTML += `<br><strong>Incorrectly Answered Questions:</strong><ul>`;
-        wrongAnswers.forEach(w => {
-            submissionDiv.innerHTML += `<li>${w.question}<br>
-                <strong>Your Answer:</strong> ${w.selected}<br>
-                <strong>Correct Answer:</strong> ${w.correct}</li>`;
-        });
-        submissionDiv.innerHTML += `</ul>`;
+    function loadSubmissions() {
+        displaySubmissionList();
     }
 
-    document.getElementById("submissions").appendChild(submissionDiv);
-}
+    function toggleNightMode() {
+        document.body.classList.toggle("night-mode");
+    }
 
-
-        window.onload = displayQuestions;
-    </script>
+    window.onload = function() {
+        displayQuestions();
+        loadSubmissions();
+    };
+</script>
 </body>
 </html>
