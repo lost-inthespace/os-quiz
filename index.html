@@ -70,6 +70,16 @@
             box-shadow: 0 2px 4px rgba(0, 0, 0, 0.3);
         }
 
+        .night-mode .submission-detail{
+            background-color: #121212;
+            color: #e0e0e0;
+        }
+
+        .night-mode .submissions-list {
+            background-color: #121212;
+            color: #121212;
+        }
+
         .night-mode button {
             background-color: #444;
             color: #fff;
@@ -816,8 +826,12 @@
         }
     ];
 
+
+
+    let selectedQuestions = [];
+
     function getRandomQuestions() {
-        let selectedQuestions = [];
+        selectedQuestions = [];  // Reset the selected questions array
         while (selectedQuestions.length < 20) {
             let randomIndex = Math.floor(Math.random() * questions.length);
             if (!selectedQuestions.includes(questions[randomIndex])) {
@@ -836,9 +850,9 @@
             questionDiv.innerHTML = `<p>${index + 1}. ${q.question}</p>`;
             q.options.forEach((option, i) => {
                 questionDiv.innerHTML += `
-                        <div class="options">
-                            <input type="radio" name="question${index}" value="${i}"> ${option}
-                        </div>`;
+                    <div class="options">
+                        <input type="radio" name="question${index}" value="${i}"> ${option}
+                    </div>`;
             });
             questionsContainer.appendChild(questionDiv);
         });
@@ -856,16 +870,24 @@
         let wrongAnswers = [];
         const form = document.getElementById("quiz-form");
         const data = new FormData(form);
+
         data.forEach((value, key) => {
             const questionIndex = parseInt(key.replace("question", ""));
-            if (parseInt(value) === questions[questionIndex].answer) {
+            const selectedAnswer = parseInt(value);
+            const correctAnswer = selectedQuestions[questionIndex].answer;
+
+            // Double-checking the answer
+            if (selectedAnswer === correctAnswer) {
                 score += 1;
-                correctAnswers.push(questions[questionIndex].question);
+                correctAnswers.push({
+                    question: selectedQuestions[questionIndex].question,
+                    selected: selectedQuestions[questionIndex].options[selectedAnswer]
+                });
             } else {
                 wrongAnswers.push({
-                    question: questions[questionIndex].question,
-                    selected: questions[questionIndex].options[value],
-                    correct: questions[questionIndex].options[questions[questionIndex].answer]
+                    question: selectedQuestions[questionIndex].question,
+                    selected: selectedQuestions[questionIndex].options[selectedAnswer],
+                    correct: selectedQuestions[questionIndex].options[correctAnswer]
                 });
             }
         });
@@ -884,6 +906,8 @@
         displaySubmissionList();
         document.getElementById("result").innerText = `You scored ${score}/20`;
     }
+
+
 
     function displaySubmissionList() {
         const submissions = JSON.parse(localStorage.getItem('submissions')) || [];
